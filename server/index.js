@@ -31,6 +31,15 @@ app.use('/api', fileRoutes);
 // Serve uploaded files statically
 app.use('/uploads', express.static(uploadDir));
 
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -45,4 +54,4 @@ DBConnection().then(() => {
         console.log(`Server is running on port ${PORT}`);
         console.log(`Files will be uploaded to: ${uploadDir}`);
     });
-}); 
+});
