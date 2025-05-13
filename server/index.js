@@ -25,14 +25,14 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir);
 }
 
-// Routes
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// API routes
 app.use('/api', fileRoutes);
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(uploadDir));
-
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
@@ -50,8 +50,7 @@ const PORT = process.env.PORT || 5000;
 
 // Connect to database and start server
 DBConnection().then(() => {
-    app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-        console.log(`Files will be uploaded to: ${uploadDir}`);
-    });
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
